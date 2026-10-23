@@ -1,0 +1,8 @@
+{
+  "note": "Small, fictional value profile used by the parser and taxonomy tests.",
+  "sector": [["Industrial Services", 1], ["Healthcare", 1], ["Technology", 1], ["Consumer", 1], ["Energy", 1]],
+  "country": [["Singapore", 3], ["Indonesia", 1], ["Malaysia", 1], ["Vietnam", 1], ["Hong Kong", 1], ["", 1], ["Malaysia / Indonesia", 1], ["Thailand", 1]],
+  "latest_sales": [["S$2.00M", 1], ["45M", 1], ["VND 50.00B", 1], ["-", 1], [null, 1]],
+  "latest_ebitda": [["500K", 1], ["40%", 1], ["VND 20.00B", 1]],
+  "net_debt_cash": [["0", 1], ["3.00M", 1], [null, 1]]
+}

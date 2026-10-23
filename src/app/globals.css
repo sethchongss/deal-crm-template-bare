@@ -1,0 +1,333 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.625rem;
+    --background: #ffffff;
+    --foreground: #121212;
+    --card: #ffffff;
+    --card-foreground: #121212;
+    --card-border: #e7e7e9;
+    --popover: #ffffff;
+    --popover-foreground: #121212;
+    --primary: #121212;
+    --primary-foreground: #ffffff;
+    --secondary: #fafafa;
+    --secondary-foreground: #121212;
+    --muted: #f0f0f0;
+    --muted-foreground: #757575;
+    --subtle: #a1a1a1;
+    --icon: #aaaaaa;
+    --accent: #f0f0f0;
+    --accent-foreground: #121212;
+    --destructive: #3f3f46;
+    --destructive-foreground: #ffffff;
+    --border: #ededed;
+    --input: #ededed;
+    --ring: #0d5fea;
+    --brand: #2575ff;
+    --info: #0d5fea;
+    --success: #47ba39;
+    --warning: #ff6e00;
+    --danger: #57534e;
+    --sidebar: #fafafa;
+    --sidebar-foreground: #121212;
+    --sidebar-primary: #121212;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #f0f0f0;
+    --sidebar-accent-foreground: #121212;
+    --sidebar-border: #ededed;
+    --sidebar-ring: #0d5fea;
+    --sidebar-width: 254px;
+    --line-strong: #e4e4e4;
+    --faint: #d4d4d4;
+    --soft: #5c5c5c;
+    --chip: #3a3a3a;
+    --track: #ececec;
+    --shadow-card: 0 1px 2px #00000014, 0 0 0 1px var(--border);
+    --shadow-lift: 0 0 0 1px #2575ff3d, 0 0 0 4px #2575ff29, 0 2px 4px #23232308, 0 1px 2px #2323230a, 0 2px 12px #23232314, 0 6px 16px #2323231f;
+    --shadow-pop: 0 16px 40px #0000001f, 0 0 0 1px var(--border);
+    --shadow-focus: 0 0 0 1px var(--info), 0 0 0 4px #0d5fea24;
+    --status-motion: #121212;
+    --status-idle: #e7e3dc;
+    --status-risk: #57534e;
+    --status-done: #47ba39;
+    --ease-power2-out: cubic-bezier(0.33, 1, 0.68, 1);
+    --ease-power3-out: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-power4-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-smooth-in-out: cubic-bezier(0.7, 0, 0, 1);
+    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+    --tag-blue-bg: #e8f1ff;
+    --tag-blue-border: #d4e4ff;
+    --tag-blue-text: #1d4ed8;
+    --tag-purple-bg: #f3eefe;
+    --tag-purple-border: #e4d9fb;
+    --tag-purple-text: #6d28d9;
+    --tag-green-bg: #e8f8ee;
+    --tag-green-border: #cfeedd;
+    --tag-green-text: #166534;
+    --tag-moss-bg: #eef6e6;
+    --tag-moss-border: #d7e8c4;
+    --tag-moss-text: #3f6212;
+    --tag-slate-bg: #eef1f4;
+    --tag-slate-border: #d5dde6;
+    --tag-slate-text: #334155;
+    --tag-indigo-bg: #eef0ff;
+    --tag-indigo-border: #d5daf8;
+    --tag-indigo-text: #3730a3;
+    --tag-plum-bg: #f6eefe;
+    --tag-plum-border: #e4d4f7;
+    --tag-plum-text: #6b21a8;
+    --tag-orange-bg: #fff1e8;
+    --tag-orange-border: #ffd7bf;
+    --tag-orange-text: #c2410c;
+    --tag-amber-bg: #fff6e8;
+    --tag-amber-border: #fde4bf;
+    --tag-amber-text: #b45309;
+    --tag-teal-bg: #e7f7f4;
+    --tag-teal-border: #c7ebe4;
+    --tag-teal-text: #0f766e;
+    --tag-yellow-bg: #fbf6d8;
+    --tag-yellow-border: #f3e7a8;
+    --tag-yellow-text: #a16207;
+    --tag-neutral-bg: #f4f4f5;
+    --tag-neutral-border: #e6e6e7;
+    --tag-neutral-text: #3f3f46;
+    color-scheme: light;
+  }
+
+  .dark {
+    --background: #161616;
+    --foreground: #f9fbff;
+    --card: #1b1d20;
+    --card-foreground: #f9fbff;
+    --card-border: #232323;
+    --popover: #161616;
+    --popover-foreground: #f9fbff;
+    --primary: #f9fbff;
+    --primary-foreground: #161616;
+    --secondary: #1e1e1e;
+    --secondary-foreground: #f9fbff;
+    --muted: #2a2a2a;
+    --muted-foreground: #7f7f7f;
+    --subtle: #676767;
+    --icon: #d0d4dd;
+    --accent: #2a2a2a;
+    --accent-foreground: #f9fbff;
+    --destructive: #d4d4d8;
+    --destructive-foreground: #18181b;
+    --border: #232323;
+    --input: #393939;
+    --ring: #676767;
+    --brand: #2575ff;
+    --info: #8eb6ff;
+    --success: #22c55e;
+    --warning: #fbbf24;
+    --danger: #d6d3d1;
+    --sidebar: #171717;
+    --sidebar-foreground: #a3a3a3;
+    --sidebar-primary: #2a2a2a;
+    --sidebar-primary-foreground: #f9fbff;
+    --sidebar-accent: #181818;
+    --sidebar-accent-foreground: #f9fbff;
+    --sidebar-border: #232323;
+    --sidebar-ring: #676767;
+    --line-strong: #393939;
+    --faint: #454545;
+    --soft: #a4a4a4;
+    --chip: #cfcfcf;
+    --track: #3a3a3a;
+    --shadow-card: 0 6px 6px #0f0f0f3d, 0 0 0 1.5px #232323;
+    --shadow-lift: 0 0 0 1px #2575ff66, 0 0 0 4px #2575ff33, 0 12px 28px #00000080;
+    --shadow-pop: 0 16px 40px #00000080, 0 0 0 1px #0e0e0e;
+    --shadow-focus: 0 0 0 1px #676767, 0 0 0 4px #67676733;
+    --status-motion: #f4f4f5;
+    --status-idle: #3a3a3a;
+    --status-risk: #d6d3d1;
+    --status-done: #22c55e;
+    --tag-blue-bg: #1d2b3e;
+    --tag-blue-border: #23354c;
+    --tag-blue-text: #bfdbfe;
+    --tag-purple-bg: #231f3a;
+    --tag-purple-border: #4b437b;
+    --tag-purple-text: #b7aee9;
+    --tag-green-bg: #1f3a2d;
+    --tag-green-border: #275137;
+    --tag-green-text: #b1ebc5;
+    --tag-moss-bg: #23451d;
+    --tag-moss-border: #2e5029;
+    --tag-moss-text: #b1ebc5;
+    --tag-slate-bg: #1e2430;
+    --tag-slate-border: #334155;
+    --tag-slate-text: #cbd5e1;
+    --tag-indigo-bg: #1e1b38;
+    --tag-indigo-border: #3730a3;
+    --tag-indigo-text: #c7d2fe;
+    --tag-plum-bg: #2a1b33;
+    --tag-plum-border: #581c87;
+    --tag-plum-text: #e9d5ff;
+    --tag-orange-bg: #3e291d;
+    --tag-orange-border: #764d35;
+    --tag-orange-text: #eeb390;
+    --tag-amber-bg: #31221b;
+    --tag-amber-border: #6c4830;
+    --tag-amber-text: #fed7aa;
+    --tag-teal-bg: #102a27;
+    --tag-teal-border: #3b6149;
+    --tag-teal-text: #5eead4;
+    --tag-yellow-bg: #33301a;
+    --tag-yellow-border: #5a5228;
+    --tag-yellow-text: #fde68a;
+    --tag-neutral-bg: #2a2a2a;
+    --tag-neutral-border: #363636;
+    --tag-neutral-text: #cfcfcf;
+    color-scheme: dark;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    background: var(--background);
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    letter-spacing: -0.011em;
+    font-feature-settings: "ss01";
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--brand) 28%, transparent);
+  }
+}
+
+@layer utilities {
+  .shadow-card { box-shadow: var(--shadow-card); }
+  .shadow-lift { box-shadow: var(--shadow-lift); }
+  .shadow-pop { box-shadow: var(--shadow-pop); }
+  .shadow-focus { box-shadow: var(--shadow-focus); }
+  .press {
+    transition-property: scale, opacity, background-color, color, box-shadow;
+    transition-duration: 150ms;
+    transition-timing-function: var(--ease-power3-out);
+  }
+  .press:active { scale: 0.96; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+}
+
+.overflow-auto,
+.overflow-x-auto,
+.overflow-y-auto,
+.sleek-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.overflow-auto:hover,
+.overflow-x-auto:hover,
+.overflow-y-auto:hover,
+.sleek-scroll:hover,
+.overflow-auto.is-scrolling,
+.overflow-x-auto.is-scrolling,
+.overflow-y-auto.is-scrolling,
+.sleek-scroll.is-scrolling {
+  scrollbar-color: color-mix(in srgb, var(--foreground) 32%, transparent) transparent;
+}
+
+.overflow-auto::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar,
+.sleek-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.overflow-auto::-webkit-scrollbar-track,
+.overflow-x-auto::-webkit-scrollbar-track,
+.overflow-y-auto::-webkit-scrollbar-track,
+.sleek-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb,
+.overflow-x-auto::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb,
+.sleek-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+}
+
+.overflow-auto:hover::-webkit-scrollbar-thumb,
+.overflow-x-auto:hover::-webkit-scrollbar-thumb,
+.overflow-y-auto:hover::-webkit-scrollbar-thumb,
+.sleek-scroll:hover::-webkit-scrollbar-thumb,
+.overflow-auto.is-scrolling::-webkit-scrollbar-thumb,
+.overflow-x-auto.is-scrolling::-webkit-scrollbar-thumb,
+.overflow-y-auto.is-scrolling::-webkit-scrollbar-thumb,
+.sleek-scroll.is-scrolling::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--foreground) 28%, transparent);
+}
+
+.ind-agritech { background: #f7fad2; border-color: #e4eca0; color: #3f6212; }
+.ind-air-transport { background: #e0f2fe; border-color: #bae6fd; color: #0369a1; }
+.ind-built-environment { background: #f5f0e6; border-color: #e6dcc8; color: #57534e; }
+.ind-business-services { background: #e8eef5; border-color: #cfd8e6; color: #334155; }
+.ind-electronics { background: #ecfeff; border-color: #a5f3fc; color: #0e7490; }
+.ind-energy-and-chemicals { background: #f4f1d8; border-color: #e4dba8; color: #713f12; }
+.ind-food-manufacturing { background: #f3e8d8; border-color: #e6d0b0; color: #7c4a1e; }
+.ind-food-services { background: #fdecd8; border-color: #f6d2a8; color: #9a5b12; }
+.ind-healthcare-and-biomedical { background: #d9fbe8; border-color: #a7f3c9; color: #047857; }
+.ind-ict-and-media { background: #e0e7ff; border-color: #c7d2fe; color: #3730a3; }
+.ind-land-transport { background: #f1efe4; border-color: #ddd6c2; color: #57534e; }
+.ind-logistics { background: #e7eefc; border-color: #c9d7f5; color: #1e3a8a; }
+.ind-marine-and-offshore-energy { background: #dbeafe; border-color: #bfdbfe; color: #1d4ed8; }
+.ind-precision-engineering { background: #e5e7eb; border-color: #d1d5db; color: #374151; }
+.ind-retail { background: #fae8ff; border-color: #f0d0f8; color: #86198f; }
+.ind-sea-transport { background: #cffafe; border-color: #a5f3fc; color: #155e75; }
+.ind-urban-solutions { background: #e8f5e4; border-color: #cde8c4; color: #3f6212; }
+.ind-wholesale-trade { background: #f3eee6; border-color: #e4d9c8; color: #44403c; }
+.ind-education { background: #ede9fe; border-color: #ddd6fe; color: #5b21b6; }
+.ind-consumer-and-lifestyle { background: #f3e6df; border-color: #e0cfc4; color: #6b4f45; }
+.ind-hospitality-and-tourism { background: #fff4e0; border-color: #fde68a; color: #92400e; }
+.ind-financial-services-and-real-estate { background: #e2e8f0; border-color: #cbd5e1; color: #1e293b; }
+
+.dark .ind-agritech { background: #243014; border-color: #3f6212; color: #ecfccb; }
+.dark .ind-air-transport { background: #0c2433; border-color: #075985; color: #bae6fd; }
+.dark .ind-built-environment { background: #2a261f; border-color: #57534e; color: #e7e5e4; }
+.dark .ind-business-services { background: #1e2430; border-color: #334155; color: #e2e8f0; }
+.dark .ind-electronics { background: #102a2e; border-color: #155e75; color: #a5f3fc; }
+.dark .ind-energy-and-chemicals { background: #2c2614; border-color: #713f12; color: #fde68a; }
+.dark .ind-food-manufacturing { background: #2c2218; border-color: #7c4a1e; color: #f5deb3; }
+.dark .ind-food-services { background: #2e2318; border-color: #9a5b12; color: #fed7aa; }
+.dark .ind-healthcare-and-biomedical { background: #123024; border-color: #047857; color: #a7f3d0; }
+.dark .ind-ict-and-media { background: #1e1b38; border-color: #3730a3; color: #c7d2fe; }
+.dark .ind-land-transport { background: #29261e; border-color: #57534e; color: #e7e5e4; }
+.dark .ind-logistics { background: #172038; border-color: #1e3a8a; color: #dbeafe; }
+.dark .ind-marine-and-offshore-energy { background: #172554; border-color: #1d4ed8; color: #dbeafe; }
+.dark .ind-precision-engineering { background: #1f2937; border-color: #4b5563; color: #e5e7eb; }
+.dark .ind-retail { background: #3b0764; border-color: #86198f; color: #f5d0fe; }
+.dark .ind-sea-transport { background: #083344; border-color: #155e75; color: #a5f3fc; }
+.dark .ind-urban-solutions { background: #1c2b16; border-color: #3f6212; color: #d9f99d; }
+.dark .ind-wholesale-trade { background: #292524; border-color: #44403c; color: #e7e5e4; }
+.dark .ind-education { background: #2e1065; border-color: #5b21b6; color: #ddd6fe; }
+.dark .ind-consumer-and-lifestyle { background: #3a2c28; border-color: #6b4f45; color: #f3e6df; }
+.dark .ind-hospitality-and-tourism { background: #3b2a12; border-color: #92400e; color: #fde68a; }
+.dark .ind-financial-services-and-real-estate { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

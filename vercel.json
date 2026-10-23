@@ -1,0 +1,13 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/keepalive",
+      "schedule": "0 3 * * *"
+    }
+  ],
+  "functions": {
+    "src/app/api/mcp/route.ts": {
+      "maxDuration": 60
+    }
+  }
+}

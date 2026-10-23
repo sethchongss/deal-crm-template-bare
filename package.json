@@ -1,0 +1,51 @@
+{
+  "name": "deal-crm-template",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.6"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --import ./scripts/register-test-alias.mjs --test src/lib/financials.test.ts src/lib/taxonomy.test.ts src/lib/kanban-order.test.ts src/lib/board-return.test.ts src/lib/card-summary.test.ts src/lib/card-valuation.test.ts src/lib/format.test.ts src/lib/latest-update.test.ts src/lib/partners.test.ts src/lib/task-dates.test.ts src/lib/team.test.ts src/lib/country-color.test.ts src/lib/tag-styles.test.ts src/lib/industries.test.ts src/lib/import-deals.test.ts src/lib/mcp/oauth.test.ts src/lib/mcp/deals.test.ts src/lib/mcp/e2e.test.ts src/lib/mcp/prompts.test.ts"
+  },
+  "dependencies": {
+    "@hello-pangea/dnd": "^18.0.1",
+    "@modelcontextprotocol/server": "^2.3.0",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.96.0",
+    "ai": "^7.0.127",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "exceljs": "^4.4.0",
+    "lucide-react": "^0.574.0",
+    "mammoth": "^1.13.0",
+    "mcp-handler": "^2.2.0",
+    "next": "16.1.6",
+    "radix-ui": "^1.4.3",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "tailwind-merge": "^3.4.1",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "^2.3.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.24",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "postcss": "^8.5.6",
+    "shadcn": "^3.8.5",
+    "tailwindcss": "^3.4.19",
+    "tw-animate-css": "^1.4.0",
+    "typescript": "5.9.3"
+  }
+}
