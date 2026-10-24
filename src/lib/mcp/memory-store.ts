@@ -17,7 +17,14 @@ export type AuditEntry = {
   actor_label: string | null;
 };
 
-const ACTIVE: DealTier[] = ["active_tier_1", "active_tier_2", "pipeline"];
+const ACTIVE: DealTier[] = ["active", "pipeline"];
+
+/** History rows written before the board change may name a retired active board. */
+function currentBoard(value: unknown): DealTier | null {
+  const text = typeof value === "string" ? value : "";
+  if (text === "active_tier_1" || text === "active_tier_2") return "active";
+  return (ACTIVE as string[]).includes(text) ? (text as DealTier) : null;
+}
 
 function clone<T>(value: T): T {
   return structuredClone(value);
@@ -187,8 +194,8 @@ export class MemoryStore {
   async lastActiveBoard(dealId: string) {
     const matches = this.history.filter((item) => item.deal_id === dealId && item.field === "tier" && item.to_value === "passed");
     const row = matches.at(-1);
-    if (!row || !ACTIVE.includes(row.from_value as DealTier)) return null;
-    return String(row.from_value);
+    if (!row) return null;
+    return currentBoard(row.from_value);
   }
 
   async createDeal(row: Record<string, unknown>) {

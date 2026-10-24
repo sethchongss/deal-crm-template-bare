@@ -40,8 +40,7 @@ export const TAG_CLASS: Record<TagTone, string> = {
 };
 
 export const TIER_TONE: Record<DealTier, TagTone> = {
-  active_tier_1: "teal",
-  active_tier_2: "blue",
+  active: "teal",
   pipeline: "amber",
   passed: "slate",
 };

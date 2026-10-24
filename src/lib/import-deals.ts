@@ -9,12 +9,14 @@ const PROPRIETARY_MARK = /\[\s*proprietary\s*\]/gi;
 
 const TIER_LABELS: Record<string, DealTier> = {
   pipeline: "pipeline",
-  "active tier i": "active_tier_1",
-  "active tier 1": "active_tier_1",
-  "active tier ii": "active_tier_2",
-  "active tier 2": "active_tier_2",
-  active_tier_1: "active_tier_1",
-  active_tier_2: "active_tier_2",
+  active: "active",
+  // Older exports used two active boards. Both now land on Active.
+  "active tier i": "active",
+  "active tier 1": "active",
+  "active tier ii": "active",
+  "active tier 2": "active",
+  active_tier_1: "active",
+  active_tier_2: "active",
   "passed / out": "passed",
   "passed/out": "passed",
   passed: "passed",

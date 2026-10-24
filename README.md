@@ -10,8 +10,8 @@ The button asks for the Supabase URL and anon key plus the secrets listed below.
 
 ## Features
 
-- Kanban boards for active, pipeline and passed deals, plus archive and realized views
-- Deal pages with financials, notes, workstreams and a Gantt timeline
+- A three-column board: **Active | Pipeline | Passed / Out**, with soft pastel cards in a colour per column, large status chips and a checklist progress bar on every card, plus archive and realized views
+- Deal pages with an investment checklist (Screening, First call, NDA, Model, Due diligence, IC, Close), financials, notes, workstreams and a Gantt timeline
 - Partners directory (advisers, co-investors, lenders, operators) linked to deals
 - Spreadsheet import and Excel export
 - Optional MCP connector so any MCP client can read and update deals, with an audit log and undo

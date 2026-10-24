@@ -45,7 +45,7 @@ export type CrmStore = Pick<
   | "undo"
 >;
 
-const board = z.string().describe("Board: Active Tier I, Active Tier II, Pipeline, or Passed / Out.");
+const board = z.string().describe("Board: Active, Pipeline, or Passed / Out.");
 const stage = z.string().describe(`Stage: ${DEAL_STAGES.filter((item) => item !== "Passed").join(", ")}. Do not use Passed; mark is_passed instead.`);
 
 const dealRef = {

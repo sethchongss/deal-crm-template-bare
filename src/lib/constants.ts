@@ -12,11 +12,10 @@ import { STAGE_TONE, TIER_TONE, type TagTone } from "@/lib/tag-styles";
 export type { TagTone } from "@/lib/tag-styles";
 export { TAG_CLASS, TAG_TONES, toneForKey } from "@/lib/tag-styles";
 
-export const TIER_ORDER: DealTier[] = ["active_tier_1", "active_tier_2", "pipeline", "passed"];
+export const TIER_ORDER: DealTier[] = ["active", "pipeline", "passed"];
 
 export const TIER_CONFIG: Record<DealTier, { label: string; tone: TagTone; dot: string }> = {
-  active_tier_1: { label: "Active Tier I", tone: TIER_TONE.active_tier_1, dot: "bg-[var(--tag-teal-text)]" },
-  active_tier_2: { label: "Active Tier II", tone: TIER_TONE.active_tier_2, dot: "bg-[var(--tag-blue-text)]" },
+  active: { label: "Active", tone: TIER_TONE.active, dot: "bg-[var(--tag-teal-text)]" },
   pipeline: { label: "Pipeline", tone: TIER_TONE.pipeline, dot: "bg-[var(--tag-amber-text)]" },
   passed: { label: "Passed / Out", tone: TIER_TONE.passed, dot: "bg-[var(--tag-slate-text)]" },
 };

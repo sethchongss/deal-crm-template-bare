@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { prepareDealPatch } from "@/lib/deal-patch";
 import type { ImportWrite } from "@/lib/import-deals";
 import { passedFlagsAfterTierMove, topSortOrderForBoard, type KanbanOrderUpdate } from "@/lib/kanban-order";
+import { checklistProgress, type ChecklistTask, type Progress } from "@/lib/process-checklist";
 import type { Deal, DealPartner, DealTier, Partner } from "@/types/database";
 
 function messageOf(error: { message?: string } | null, fallback: string) {
@@ -25,6 +26,9 @@ type CrmContextValue = {
   partners: Partner[];
   links: DealPartner[];
   claudeMarks: ClaudeMark[];
+  /** Checklist progress per deal id, from deal_tasks. */
+  checklist: Record<string, Progress>;
+  syncChecklist: (dealId: string, tasks: ChecklistTask[]) => void;
   loading: boolean;
   error: string | null;
   toast: string | null;
@@ -62,6 +66,7 @@ export function CrmProvider({ children }: { children: React.ReactNode }) {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [links, setLinks] = useState<DealPartner[]>([]);
   const [claudeMarks, setClaudeMarks] = useState<ClaudeMark[]>([]);
+  const [checklist, setChecklist] = useState<Record<string, Progress>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -82,7 +87,7 @@ export function CrmProvider({ children }: { children: React.ReactNode }) {
 
   const refresh = useCallback(async () => {
     const since = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
-    const [dealResult, partnerResult, linkResult, markResult] = await Promise.all([
+    const [dealResult, partnerResult, linkResult, markResult, taskResult] = await Promise.all([
       supabase.from("deals").select("*").order("sort_order", { ascending: true }),
       supabase.from("partners").select("*").order("name", { ascending: true }),
       supabase.from("deal_partners").select("*"),
@@ -93,6 +98,7 @@ export function CrmProvider({ children }: { children: React.ReactNode }) {
         .gte("created_at", since)
         .order("created_at", { ascending: false })
         .limit(200),
+      supabase.from("deal_tasks").select("deal_id, status"),
     ]);
     if (dealResult.error || partnerResult.error || linkResult.error) {
       setError(messageOf(dealResult.error || partnerResult.error || linkResult.error, "Couldn't load the pipeline."));
@@ -102,8 +108,24 @@ export function CrmProvider({ children }: { children: React.ReactNode }) {
       setPartners(partnerResult.data || []);
       setLinks(linkResult.data || []);
       setClaudeMarks(markResult.error ? [] : ((markResult.data || []) as ClaudeMark[]));
+      if (!taskResult.error) {
+        const byDeal = new Map<string, ChecklistTask[]>();
+        for (const row of (taskResult.data || []) as { deal_id: string; status: ChecklistTask["status"] }[]) {
+          byDeal.set(row.deal_id, [...(byDeal.get(row.deal_id) ?? []), row]);
+        }
+        setChecklist(Object.fromEntries([...byDeal].map(([id, rows]) => [id, checklistProgress(rows)])));
+      }
     }
     setLoading(false);
+  }, []);
+
+  const syncChecklist = useCallback((dealId: string, tasks: ChecklistTask[]) => {
+    const next = checklistProgress(tasks);
+    setChecklist((current) => {
+      const prev = current[dealId];
+      if (prev && prev.done === next.done && prev.total === next.total) return current;
+      return { ...current, [dealId]: next };
+    });
   }, []);
 
   useEffect(() => {
@@ -279,10 +301,10 @@ export function CrmProvider({ children }: { children: React.ReactNode }) {
   }, [partners, refresh]);
 
   const value = useMemo<CrmContextValue>(() => ({
-    deals, partners, links, claudeMarks, loading, error, toast, notify, refresh, undoClaudeChange, updateDeal, reorderDeals,
+    deals, partners, links, claudeMarks, checklist, syncChecklist, loading, error, toast, notify, refresh, undoClaudeChange, updateDeal, reorderDeals,
     createDeal, deleteDeal, applyImport, archiveDeal, unarchiveDeal, createPartner, updatePartner, deletePartner, refreshLinks,
   }), [
-    deals, partners, links, claudeMarks, loading, error, toast, notify, refresh, undoClaudeChange, updateDeal, reorderDeals,
+    deals, partners, links, claudeMarks, checklist, syncChecklist, loading, error, toast, notify, refresh, undoClaudeChange, updateDeal, reorderDeals,
     createDeal, deleteDeal, applyImport, archiveDeal, unarchiveDeal, createPartner, updatePartner, deletePartner, refreshLinks,
   ]);
 

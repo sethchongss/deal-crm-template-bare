@@ -372,7 +372,7 @@ test("money text is kept and still becomes card numbers", async () => {
   const sheet = await workbook([
     {
       "Company Name": "New Money Co",
-      Tier: "Active Tier II",
+      Tier: "Active",
       Sales: "THB805M",
       EBITDA: "~US$5M",
       "ND/(Cash)": "RMB146M",
@@ -394,7 +394,7 @@ test("money text is kept and still becomes card numbers", async () => {
 
 test("new deals and board moves land at the top in file order", async () => {
   const staying = deal({ id: "stay", company_name: "Staying Co", tier: "pipeline", sort_order: 5 });
-  const moving = deal({ id: "move", company_name: "Moving Co", tier: "active_tier_1", sort_order: 2 });
+  const moving = deal({ id: "move", company_name: "Moving Co", tier: "active", sort_order: 2 });
   const passedBoard = deal({ id: "old-pass", company_name: "Old Pass", tier: "passed", sort_order: 5 });
   const sheet = await workbook([
     { "Company Name": "First New", Tier: "Pipeline", Country: "Singapore" },

@@ -54,19 +54,19 @@ test("reindexes both cards when a drop would otherwise share sort_order", () => 
 
 test("moving across columns reindexes the source and the destination", () => {
   const deals = [
-    deal("a", "active_tier_1", 0),
-    deal("b", "active_tier_1", 4),
+    deal("a", "active", 0),
+    deal("b", "active", 4),
     deal("c", "pipeline", 2),
     deal("d", "pipeline", 9),
   ];
   const updates = reindexAfterDrop({
     deals,
     draggedId: "c",
-    destinationTier: "active_tier_1",
+    destinationTier: "active",
     destinationIndex: 1,
     isVisible: () => true,
   });
-  assert.deepEqual(ids(apply(deals, updates), "active_tier_1"), ["a", "c", "b"]);
+  assert.deepEqual(ids(apply(deals, updates), "active"), ["a", "c", "b"]);
   assert.deepEqual(ids(apply(deals, updates), "pipeline"), ["d"]);
   assert.deepEqual(
     updates.map((row) => [row.id, row.sort_order]),
@@ -165,8 +165,8 @@ test("returning a passed deal lands at the top without rewriting the column", ()
 
 test("an empty board gives the first arrival sort_order 0", () => {
   const deals = [deal("moved", "pipeline", 8)];
-  const updates = placeAtTop({ deals, movingId: "moved", destinationTier: "active_tier_2" });
-  assert.deepEqual(updates, [{ id: "moved", tier: "active_tier_2", sort_order: 0 }]);
+  const updates = placeAtTop({ deals, movingId: "moved", destinationTier: "active" });
+  assert.deepEqual(updates, [{ id: "moved", tier: "active", sort_order: 0 }]);
 });
 
 test("a drag to a lower slot keeps that position", () => {
@@ -206,22 +206,22 @@ test("a cross-board drop at the top renumbers instead of using min minus one", (
 
 test("boards display sort_order ascending and created_at descending on a tie", () => {
   const deals = [
-    deal("low", "active_tier_1", 0, false, "2020-01-01T00:00:00.000Z", "2026-12-01"),
-    deal("tie-older", "active_tier_1", 2, false, "2026-01-01T00:00:00.000Z", "2026-06-01"),
-    deal("tie-newer", "active_tier_1", 2, false, "2026-08-01T00:00:00.000Z", "2024-01-01"),
-    deal("high", "active_tier_1", 9, false, "2026-12-01T00:00:00.000Z", "2020-01-01"),
+    deal("low", "active", 0, false, "2020-01-01T00:00:00.000Z", "2026-12-01"),
+    deal("tie-older", "active", 2, false, "2026-01-01T00:00:00.000Z", "2026-06-01"),
+    deal("tie-newer", "active", 2, false, "2026-08-01T00:00:00.000Z", "2024-01-01"),
+    deal("high", "active", 9, false, "2026-12-01T00:00:00.000Z", "2020-01-01"),
   ];
-  assert.deepEqual(ids(deals, "active_tier_1"), ["low", "tie-newer", "tie-older", "high"]);
+  assert.deepEqual(ids(deals, "active"), ["low", "tie-newer", "tie-older", "high"]);
 });
 
 test("null sort_order sits after numbered cards, newest entry date first", () => {
   const deals = [
-    deal("ranked", "active_tier_2", 3, false, "2020-01-01T00:00:00.000Z", "2020-01-01"),
-    deal("null-old", "active_tier_2", null, false, "2026-09-01T00:00:00.000Z", "2024-01-01"),
-    deal("null-new", "active_tier_2", null, false, "2026-02-01T00:00:00.000Z", "2026-05-01"),
-    deal("null-fallback", "active_tier_2", null, false, "2026-03-01T00:00:00.000Z", null),
+    deal("ranked", "active", 3, false, "2020-01-01T00:00:00.000Z", "2020-01-01"),
+    deal("null-old", "active", null, false, "2026-09-01T00:00:00.000Z", "2024-01-01"),
+    deal("null-new", "active", null, false, "2026-02-01T00:00:00.000Z", "2026-05-01"),
+    deal("null-fallback", "active", null, false, "2026-03-01T00:00:00.000Z", null),
   ];
-  assert.deepEqual(ids(deals, "active_tier_2"), ["ranked", "null-new", "null-fallback", "null-old"]);
+  assert.deepEqual(ids(deals, "active"), ["ranked", "null-new", "null-fallback", "null-old"]);
 });
 
 test("hand-set pipeline order wins until a new deal takes min minus one", () => {
@@ -280,8 +280,8 @@ test("topSortOrder is one below the current minimum and ignores archived cards",
 
 test("moving to Passed marks the deal passed and leaves the stage decision to the caller", () => {
   assert.equal(passedFlagsAfterTierMove("pipeline", "passed"), "set");
-  assert.equal(passedFlagsAfterTierMove("passed", "active_tier_1"), "clear");
+  assert.equal(passedFlagsAfterTierMove("passed", "active"), "clear");
   assert.equal(passedFlagsAfterTierMove("passed", "pipeline"), "clear");
-  assert.equal(passedFlagsAfterTierMove("pipeline", "active_tier_1"), null);
-  assert.equal(passedFlagsAfterTierMove("active_tier_1", "active_tier_1"), null);
+  assert.equal(passedFlagsAfterTierMove("pipeline", "active"), null);
+  assert.equal(passedFlagsAfterTierMove("active", "active"), null);
 });

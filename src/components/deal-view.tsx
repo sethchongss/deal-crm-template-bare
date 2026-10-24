@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Archive, ArchiveRestore, ArrowLeft, Expand, Pencil, Trash2, X } from "lucide-react";
 import { DealEditor } from "@/components/deal-editor";
 import { DealGantt } from "@/components/deal-gantt";
+import { ProcessChecklist } from "@/components/process-checklist";
 import { ScreeningDisplay } from "@/components/screening-display";
 import { ScreeningUpload } from "@/components/screening-upload";
 import { Tag } from "@/components/tag";
@@ -21,6 +22,8 @@ import { STANDARD_TEMPLATE, templateDate } from "@/lib/task-dates";
 import { latestUpdateAfterDelete, latestUpdateAfterEdit, latestUpdateFromNote } from "@/lib/latest-update";
 import { displayStage, passedAtLabel, stageTone } from "@/lib/passed";
 import { PASSED_TONE, PROPRIETARY_TONE } from "@/lib/tag-styles";
+import { BOARD_SOFT, PROCESS_STEPS, stepForWorkstream } from "@/lib/process-checklist";
+import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import type { Deal, DealActivity, DealStageHistory, DealTask, DealWorkstream } from "@/types/database";
 
@@ -124,7 +127,7 @@ export function DealView({ deal, mode, onClose }: { deal: Deal; mode: "drawer" |
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { updateDeal, deleteDeal, archiveDeal, unarchiveDeal, refresh, notify, claudeMarks } = useCrm();
+  const { updateDeal, deleteDeal, archiveDeal, unarchiveDeal, refresh, notify, claudeMarks, syncChecklist } = useCrm();
   const { activities, error: activityError, addActivity, updateActivity, deleteActivity } = useDealActivities(deal.id);
   const [note, setNote] = useState("");
   const [updateText, setUpdateText] = useState("");
@@ -160,6 +163,10 @@ export function DealView({ deal, mode, onClose }: { deal: Deal; mode: "drawer" |
       cancelled = true;
     };
   }, [deal.id]);
+
+  useEffect(() => {
+    if (!detailLoading) syncChecklist(deal.id, tasks);
+  }, [deal.id, detailLoading, syncChecklist, tasks]);
 
   const logNote = async (text: string) => {
     const submission = latestUpdateFromNote(text);
@@ -349,6 +356,44 @@ export function DealView({ deal, mode, onClose }: { deal: Deal; mode: "drawer" |
     return true;
   };
 
+  const toggleChecklistItem = (task: DealTask) =>
+    updateTask(task.id, { status: task.status === "done" ? "not_started" : "done" });
+
+  const addChecklistItem = async (stepName: string, title: string) => {
+    const stream = workstreams.find((item) => stepForWorkstream(item.name)?.name === stepName);
+    if (!stream) return false;
+    return addTask(stream.id, title);
+  };
+
+  const startChecklist = async () => {
+    let order = workstreams.length;
+    for (const step of PROCESS_STEPS) {
+      if (workstreams.some((item) => stepForWorkstream(item.name)?.key === step.key)) continue;
+      const { data, error } = await supabase.from("deal_workstreams").insert({ deal_id: deal.id, name: step.name, sort_order: order }).select().single();
+      if (error || !data) {
+        setDetailError(error?.message || "Couldn't start the checklist.");
+        return false;
+      }
+      order += 1;
+      const rows = step.tasks.map((title, index) => ({
+        workstream_id: data.id,
+        deal_id: deal.id,
+        title,
+        is_milestone: false,
+        status: "not_started" as const,
+        sort_order: index,
+      }));
+      const inserted = await supabase.from("deal_tasks").insert(rows).select();
+      if (inserted.error) {
+        setDetailError(inserted.error.message);
+        return false;
+      }
+      setWorkstreams((current) => [...current, data]);
+      setTasks((current) => [...current, ...(inserted.data || [])]);
+    }
+    return true;
+  };
+
   const openFullPage = () => {
     const nav = fullPageNavigation(pathname, searchParams.toString(), deal.id);
     sessionStorage.setItem(DEAL_RETURN_KEY, nav.replace);
@@ -394,7 +439,7 @@ export function DealView({ deal, mode, onClose }: { deal: Deal; mode: "drawer" |
             )}
             <div className="mt-2 flex flex-wrap items-center gap-1.5">
               {deal.is_proprietary && <Tag tone={PROPRIETARY_TONE}>Proprietary</Tag>}
-              <Tag tone={TIER_CONFIG[boardTier].tone}>{TIER_CONFIG[boardTier].label}</Tag>
+              <span className={cn("inline-flex h-7 items-center rounded-full px-3 text-[12px] font-semibold", BOARD_SOFT[boardTier].chip)}>{TIER_CONFIG[boardTier].label}</span>
               {deal.is_passed && <Tag tone={PASSED_TONE}>Passed</Tag>}
               {deal.deal_stage && <Tag tone={stageTone(deal.deal_stage)}>{displayStage(deal.deal_stage)}</Tag>}
               {deal.is_passed && <span className="text-xs text-muted-foreground">{passedAtLabel(deal.deal_stage)}</span>}
@@ -444,6 +489,19 @@ export function DealView({ deal, mode, onClose }: { deal: Deal; mode: "drawer" |
 
       <div className="min-h-0 flex-1 space-y-6 overflow-auto px-4 py-5 md:px-6">
         {detailError && <p className="text-sm text-destructive" role="alert">{detailError}</p>}
+
+        {detailLoading ? (
+          <p className="text-sm text-muted-foreground">Loading checklist…</p>
+        ) : (
+          <ProcessChecklist
+            tier={boardTier}
+            workstreams={workstreams}
+            tasks={tasks}
+            onToggle={toggleChecklistItem}
+            onAddItem={addChecklistItem}
+            onStart={startChecklist}
+          />
+        )}
 
         <section className="rounded-2xl bg-card p-4 shadow-card">
           <h2 className="text-sm font-semibold tracking-[-0.02em]">Latest update</h2>

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { CrmError, buildCreateDeal, buildUpdateDeal } from "@/lib/mcp/deal-write";
+import { CrmError, buildCreateDeal, buildUpdateDeal, parseBoard } from "@/lib/mcp/deal-write";
 import { MemoryStore } from "@/lib/mcp/memory-store";
 import { CRM_TOOL_NAMES, callCrmTool } from "@/lib/mcp/tools";
 import type { Deal } from "@/types/database";
@@ -58,12 +58,12 @@ test("a new deal and a board move take the top sort_order", async () => {
   assert.equal(first.deal.sort_order, 0);
   assert.equal(second.deal.sort_order, -1);
 
-  await callCrmTool(store, "update_deal", { deal_id: first.deal.id, board: "Active Tier I" });
+  await callCrmTool(store, "update_deal", { deal_id: first.deal.id, board: "Active" });
   const moved = (await callCrmTool(store, "get_deal", { deal_id: first.deal.id })) as { deal: { tier: string; sort_order: number } };
-  assert.equal(moved.deal.tier, "active_tier_1");
+  assert.equal(moved.deal.tier, "active");
   assert.equal(moved.deal.sort_order, 0);
 
-  const third = (await callCrmTool(store, "create_deal", { name: "Third", board: "Active Tier I" })) as { deal: { sort_order: number } };
+  const third = (await callCrmTool(store, "create_deal", { name: "Third", board: "Active" })) as { deal: { sort_order: number } };
   assert.equal(third.deal.sort_order, -1);
 
   const passed = (await callCrmTool(store, "update_deal", { deal_id: second.deal.id, is_passed: true })) as {
@@ -81,7 +81,7 @@ test("passing keeps the stage and un-passing restores an active board", () => {
   assert.equal(passed.passed_reason, "valuation gap");
 
   const onPassed = { ...current, tier: "passed" as const, passed_at: "2026-01-01T00:00:00.000Z" };
-  assert.equal(buildUpdateDeal(onPassed, { is_passed: false }, "active_tier_1").tier, "active_tier_1");
+  assert.equal(buildUpdateDeal(onPassed, { is_passed: false }, "active").tier, "active");
   assert.equal(buildUpdateDeal(onPassed, { is_passed: false }, null).tier, "pipeline");
   assert.equal(buildUpdateDeal(onPassed, { is_passed: false }, null).is_passed, false);
 
@@ -110,7 +110,7 @@ test("tools create, update, and undo against the memory store", async () => {
   const loaded = (await callCrmTool(store, "get_deal", { deal: "deal-2" })) as { deal: { id: string } };
   assert.equal(loaded.deal.id, created.deal.id);
 
-  await callCrmTool(store, "update_deal", { deal_id: created.deal.id, board: "Active Tier I" });
+  await callCrmTool(store, "update_deal", { deal_id: created.deal.id, board: "Active" });
   const passed = (await callCrmTool(store, "update_deal", {
     deal_id: created.deal.id,
     is_passed: true,
@@ -126,7 +126,7 @@ test("tools create, update, and undo against the memory store", async () => {
   const restored = (await callCrmTool(store, "update_deal", { deal_id: created.deal.id, is_passed: false })) as {
     deal: { tier: string; is_passed: boolean; deal_stage: string };
   };
-  assert.equal(restored.deal.tier, "active_tier_1");
+  assert.equal(restored.deal.tier, "active");
   assert.equal(restored.deal.is_passed, false);
   assert.equal(restored.deal.deal_stage, "Screening/Pipeline");
 
@@ -247,4 +247,13 @@ test("undo refuses a change that was not made via Claude", async () => {
   const created = await store.createDeal({ company_name: "Web Deal", tier: "pipeline", deal_stage: "Screening/Pipeline" });
   store.source = "claude";
   await assert.rejects(() => store.undo(created.audit_id), /only changes made via Claude/);
+});
+
+test("there are three boards and the old active board names map to Active", () => {
+  assert.equal(parseBoard("Active"), "active");
+  assert.equal(parseBoard("Active Tier I"), "active");
+  assert.equal(parseBoard("active_tier_2"), "active");
+  assert.equal(parseBoard("Pipeline"), "pipeline");
+  assert.equal(parseBoard("Passed / Out"), "passed");
+  assert.throws(() => parseBoard("Tier III"), CrmError);
 });

@@ -3,7 +3,14 @@ import { topSortOrder } from "@/lib/kanban-order";
 import { CrmError } from "@/lib/mcp/deal-write";
 import type { DealTier } from "@/types/database";
 
-const ACTIVE: DealTier[] = ["active_tier_1", "active_tier_2", "pipeline"];
+const ACTIVE: DealTier[] = ["active", "pipeline"];
+
+/** History rows written before the board change may name a retired active board. */
+function currentBoard(value: unknown): DealTier | null {
+  const text = typeof value === "string" ? value : "";
+  if (text === "active_tier_1" || text === "active_tier_2") return "active";
+  return (ACTIVE as string[]).includes(text) ? (text as DealTier) : null;
+}
 
 function fail(error: { message: string } | null, fallback: string): never {
   throw new CrmError(error?.message || fallback);
@@ -157,7 +164,7 @@ export class SupabaseStore {
       .limit(1);
     if (error) return null;
     const from = data?.[0]?.from_value as string | undefined;
-    return from && (ACTIVE as string[]).includes(from) ? from : null;
+    return currentBoard(from);
   }
 
   async createDeal(row: Record<string, unknown>) {

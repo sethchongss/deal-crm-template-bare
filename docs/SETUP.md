@@ -60,6 +60,10 @@ Vercel Cron calls `GET /api/cron/keepalive` once a day at 03:00 UTC (`vercel.jso
 - `private.team_emails` holds the allowed login emails (lower case). The migration inserts none.
 - `private.is_team()` is true only when the signed-in user's email is in `private.team_emails`. Policies call it as `(select private.is_team())`.
 
+`20261024120000_three_boards.sql` sets the board column (`deals.tier`) to three values: `active`, `pipeline` and `passed` (shown as Active, Pipeline and Passed / Out). New deals default to `pipeline`. On an older database it moves any deal on the two retired active boards (`active_tier_1`, `active_tier_2`) to `active`, and is a no-op once that is done. Imports and the connector still accept the old board names and map them to Active.
+
+The investment checklist on each deal uses the existing `deal_workstreams` and `deal_tasks` tables. Workstreams named Screening, First call, NDA, Model, Due diligence, IC and Close are shown as the checklist steps; "Start checklist" on a deal adds any that are missing with standard items. The progress bar on a board card is done items over all items for that deal.
+
 The files directly under `supabase/` (outside `migrations/`) are historical. Do not run them. `supabase/local/00_baseline.sql` is only a stand-in for testing migrations against plain Postgres.
 
 ## 3. Create the shared team login

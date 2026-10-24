@@ -1,4 +1,4 @@
-export type KanbanTier = "active_tier_1" | "active_tier_2" | "pipeline" | "passed";
+export type KanbanTier = "active" | "pipeline" | "passed";
 
 export type BoardOrderDeal = {
   id: string;

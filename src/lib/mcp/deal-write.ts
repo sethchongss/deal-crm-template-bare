@@ -11,14 +11,16 @@ export { PARTNER_ROLES };
 export class CrmError extends Error {}
 
 const BOARDS: Record<string, DealTier> = {
-  active_tier_1: "active_tier_1",
-  "active tier i": "active_tier_1",
-  "active tier 1": "active_tier_1",
-  "tier i": "active_tier_1",
-  active_tier_2: "active_tier_2",
-  "active tier ii": "active_tier_2",
-  "active tier 2": "active_tier_2",
-  "tier ii": "active_tier_2",
+  active: "active",
+  // Older names for the two retired active boards.
+  active_tier_1: "active",
+  "active tier i": "active",
+  "active tier 1": "active",
+  "tier i": "active",
+  active_tier_2: "active",
+  "active tier ii": "active",
+  "active tier 2": "active",
+  "tier ii": "active",
   pipeline: "pipeline",
   passed: "passed",
   "passed / out": "passed",
@@ -27,7 +29,7 @@ const BOARDS: Record<string, DealTier> = {
 
 export function parseBoard(value: string): DealTier {
   const board = BOARDS[value.trim().toLowerCase()];
-  if (!board) throw new CrmError("Board must be Active Tier I, Active Tier II, Pipeline, or Passed / Out.");
+  if (!board) throw new CrmError("Board must be Active, Pipeline, or Passed / Out.");
   return board;
 }
 
@@ -190,7 +192,7 @@ export function buildUpdateDeal(current: Pick<Deal, "tier" | "passed_at" | "deal
     throw new CrmError("Marking a deal passed moves it to Passed / Out and keeps its stage. Leave board empty, or set board to passed.");
   }
   if (input.is_passed === false && requestedBoard === "passed") {
-    throw new CrmError("Un-passing a deal restores an active board. Use pipeline, active_tier_1, or active_tier_2.");
+    throw new CrmError("Un-passing a deal restores an active board. Use active or pipeline.");
   }
   if (typeof input.archived === "boolean") patch.archived = input.archived;
   if (input.passed_reason !== undefined) {

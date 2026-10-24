@@ -11,7 +11,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --import ./scripts/register-test-alias.mjs --test src/lib/financials.test.ts src/lib/taxonomy.test.ts src/lib/kanban-order.test.ts src/lib/board-return.test.ts src/lib/card-summary.test.ts src/lib/card-valuation.test.ts src/lib/format.test.ts src/lib/latest-update.test.ts src/lib/partners.test.ts src/lib/task-dates.test.ts src/lib/team.test.ts src/lib/country-color.test.ts src/lib/tag-styles.test.ts src/lib/industries.test.ts src/lib/import-deals.test.ts src/lib/mcp/oauth.test.ts src/lib/mcp/deals.test.ts src/lib/mcp/e2e.test.ts src/lib/mcp/prompts.test.ts"
+    "test": "node --experimental-strip-types --import ./scripts/register-test-alias.mjs --test src/lib/financials.test.ts src/lib/taxonomy.test.ts src/lib/kanban-order.test.ts src/lib/board-return.test.ts src/lib/card-summary.test.ts src/lib/card-valuation.test.ts src/lib/format.test.ts src/lib/latest-update.test.ts src/lib/partners.test.ts src/lib/task-dates.test.ts src/lib/team.test.ts src/lib/country-color.test.ts src/lib/tag-styles.test.ts src/lib/industries.test.ts src/lib/import-deals.test.ts src/lib/process-checklist.test.ts src/lib/mcp/oauth.test.ts src/lib/mcp/deals.test.ts src/lib/mcp/e2e.test.ts src/lib/mcp/prompts.test.ts"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",

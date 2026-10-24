@@ -331,3 +331,50 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Soft cards: one pastel family per board. */
+:root {
+  --soft-active-column: #eef8f3;
+  --soft-active-card: #f6fcf9;
+  --soft-active-border: #cfeedd;
+  --soft-active-chip: #d4f3e3;
+  --soft-active-track: #dcefe5;
+  --soft-active-ink: #13795b;
+  --soft-pipeline-column: #fdf5ea;
+  --soft-pipeline-card: #fffaf3;
+  --soft-pipeline-border: #f7dfbd;
+  --soft-pipeline-chip: #fde7c6;
+  --soft-pipeline-track: #f6e6cf;
+  --soft-pipeline-ink: #b25d0c;
+  --soft-passed-column: #f3f1fa;
+  --soft-passed-card: #faf9fd;
+  --soft-passed-border: #e0dbf1;
+  --soft-passed-chip: #e6e1f6;
+  --soft-passed-track: #e7e3f2;
+  --soft-passed-ink: #5b4f99;
+}
+
+.dark {
+  --soft-active-column: #12201b;
+  --soft-active-card: #172a23;
+  --soft-active-border: #24473a;
+  --soft-active-chip: #1f4537;
+  --soft-active-track: #21382f;
+  --soft-active-ink: #7ee2b8;
+  --soft-pipeline-column: #241c12;
+  --soft-pipeline-card: #2e2417;
+  --soft-pipeline-border: #4d3a22;
+  --soft-pipeline-chip: #4a3720;
+  --soft-pipeline-track: #3a2e1e;
+  --soft-pipeline-ink: #f8c27a;
+  --soft-passed-column: #1c1a26;
+  --soft-passed-card: #23202f;
+  --soft-passed-border: #393352;
+  --soft-passed-chip: #37304f;
+  --soft-passed-track: #2f2a40;
+  --soft-passed-ink: #c4b8f5;
+}
+
+.soft-card {
+  box-shadow: 0 1px 2px #0000000d, 0 6px 18px -10px #0000002e;
+}

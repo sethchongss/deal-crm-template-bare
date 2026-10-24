@@ -18,7 +18,8 @@ import { initials } from "@/lib/format";
 import { matchesProprietary, type ProprietaryFilterValue } from "@/lib/proprietary";
 import { KANBAN_SCROLL_KEY, parseKanbanScroll, type KanbanScroll } from "@/lib/board-return";
 import { orderBoardDeals, reindexAfterDrop } from "@/lib/kanban-order";
-import { displayStage, passedAtLabel, stageTone } from "@/lib/passed";
+import { displayStage, passedAtLabel } from "@/lib/passed";
+import { BOARD_SOFT } from "@/lib/process-checklist";
 import type { Deal, DealTier } from "@/types/database";
 import { cn } from "@/lib/utils";
 
@@ -44,7 +45,7 @@ interface KanbanBoardProps {
 }
 
 export function KanbanBoard({ deals, onSelectDeal, onAddDeal, searchQuery, sectorFilter, countryFilter, proprietaryFilter }: KanbanBoardProps) {
-  const { partners, links, claudeMarks, reorderDeals, notify } = useCrm();
+  const { partners, links, claudeMarks, checklist, reorderDeals, notify } = useCrm();
   const [hidden, setHidden] = useState<DealTier[]>([]);
   const [railOpen, setRailOpen] = useState(false);
   const [prefsReady, setPrefsReady] = useState(false);
@@ -193,12 +194,11 @@ export function KanbanBoard({ deals, onSelectDeal, onAddDeal, searchQuery, secto
         )}
         <div ref={rowRef} className="sleek-scroll flex min-h-0 min-w-0 flex-1 gap-3 overflow-x-auto pb-1" onScroll={(event) => { rememberScroll(event); persistScroll(); }}>
           {visibleColumns.map((column) => (
-            <section key={column.tier} className="flex min-w-[240px] max-w-[36rem] flex-1 basis-0 flex-col md:min-w-[272px]">
-              <header className="mb-2 flex items-center justify-between px-1">
+            <section key={column.tier} className={cn("flex min-w-[260px] max-w-[40rem] flex-1 basis-0 flex-col rounded-[28px] p-2 md:min-w-[300px]", BOARD_SOFT[column.tier].column)}>
+              <header className="mb-2 flex items-center justify-between px-2 pt-1">
                 <div className="flex items-center gap-2">
-                  <span className={cn("size-2 rounded-full", column.dot)} />
-                  <h2 className="text-[13px] font-semibold tracking-[-0.02em]">{column.label}</h2>
-                  <span className="rounded-full bg-muted px-1.5 text-[11px] tabular-nums text-muted-foreground">{column.deals.length}</span>
+                  <span className={cn("inline-flex h-8 items-center rounded-full px-3.5 text-[13px] font-semibold tracking-[-0.01em]", BOARD_SOFT[column.tier].chip)}>{column.label}</span>
+                  <span className="rounded-full bg-background/70 px-2 py-0.5 text-[12px] font-medium tabular-nums text-muted-foreground">{column.deals.length}</span>
                 </div>
                 <div className="flex items-center">
                   <button type="button" className="press rounded-md px-1.5 py-1 text-[11px] text-muted-foreground hoverable:hover:bg-accent" onClick={() => setHidden((current) => [...current, column.tier])}>
@@ -216,8 +216,8 @@ export function KanbanBoard({ deals, onSelectDeal, onAddDeal, searchQuery, secto
                     {...provided.droppableProps}
                     data-board-scroll={column.tier}
                     className={cn(
-                      "sleek-scroll flex min-h-40 flex-1 flex-col gap-2 overflow-y-auto rounded-2xl p-2 transition-[background-color] duration-150 ease-power3-out",
-                      snapshot.isDraggingOver ? "bg-muted" : "bg-secondary",
+                      "sleek-scroll flex min-h-40 flex-1 flex-col gap-2.5 overflow-y-auto rounded-3xl p-1 transition-[background-color] duration-150 ease-power3-out",
+                      snapshot.isDraggingOver ? "bg-background/60" : "bg-transparent",
                     )}
                     onScroll={(event) => { rememberScroll(event); persistScroll(); }}
                   >
@@ -225,6 +225,8 @@ export function KanbanBoard({ deals, onSelectDeal, onAddDeal, searchQuery, secto
                       const people = partnersByDeal.get(deal.id) ?? [];
                       const claude = claudeMarks.find((mark) => mark.table_name === "deals" && mark.row_id === deal.id);
                       const summary = cardSummary(deal.company_description);
+                      const soft = BOARD_SOFT[column.tier];
+                      const progress = checklist[deal.id];
                       return (
                         <Draggable key={deal.id} draggableId={deal.id} index={index}>
                           {(dragProvided, dragSnapshot) => (
@@ -237,11 +239,19 @@ export function KanbanBoard({ deals, onSelectDeal, onAddDeal, searchQuery, secto
                               <article
                                 onClick={() => onSelectDeal(deal)}
                                 className={cn(
-                                  "min-w-0 cursor-pointer rounded-2xl bg-card p-3 text-left shadow-card transition-[transform,box-shadow] duration-200 ease-power4-out",
+                                  "soft-card min-w-0 cursor-pointer rounded-3xl border p-4 text-left transition-[transform,box-shadow] duration-200 ease-power4-out hoverable:hover:-translate-y-0.5",
+                                  soft.card,
                                   dragSnapshot.isDragging && "rotate-[2deg] scale-[1.02] shadow-lift",
                                 )}
                               >
-                                <h3 className="text-[14px] font-medium leading-5 tracking-[-0.02em]">{deal.company_name}</h3>
+                                <div className="flex items-start justify-between gap-2">
+                                  <h3 className="text-[15px] font-semibold leading-5 tracking-[-0.02em]">{deal.company_name}</h3>
+                                </div>
+                                {deal.deal_stage && (
+                                  <span className={cn("mt-2.5 inline-flex h-7 items-center rounded-full px-3 text-[12px] font-semibold tracking-[-0.01em]", soft.chip)}>
+                                    {deal.is_passed ? passedAtLabel(deal.deal_stage) : displayStage(deal.deal_stage)}
+                                  </span>
+                                )}
                                 {claude && (
                                   <div className="mt-1.5">
                                     <ViaClaude auditId={claude.id} actor={claude.actor_label} stop />
@@ -252,9 +262,7 @@ export function KanbanBoard({ deals, onSelectDeal, onAddDeal, searchQuery, secto
                                   {deal.is_passed && <Tag tone={PASSED_TONE}>Passed</Tag>}
                                   <IndustryChip industry={deal.industry} />
                                   <CountryChip country={deal.country} />
-                                  {deal.deal_stage && <Tag tone={stageTone(deal.deal_stage)}>{displayStage(deal.deal_stage)}</Tag>}
                                 </div>
-                                {deal.is_passed && <p className="mt-1.5 text-[11px] text-muted-foreground">{passedAtLabel(deal.deal_stage)}</p>}
                                 {(deal.passed_reason || deal.pass_reason) && (
                                   <p className="mt-1.5 whitespace-pre-wrap break-words text-[11px] leading-4 text-muted-foreground">{deal.passed_reason || deal.pass_reason}</p>
                                 )}
@@ -274,10 +282,19 @@ export function KanbanBoard({ deals, onSelectDeal, onAddDeal, searchQuery, secto
                                   </Tooltip>
                                 )}
                                 <CardValuation deal={deal} className={summary ? "mt-1" : "mt-2"} />
+                                <div className="mt-3" aria-label="Checklist progress">
+                                  <div className="flex items-center justify-between text-[11px] font-medium text-muted-foreground">
+                                    <span>Checklist</span>
+                                    <span className="tabular-nums">{progress && progress.total > 0 ? `${progress.done}/${progress.total} · ${progress.percent}%` : "Not started"}</span>
+                                  </div>
+                                  <div className={cn("mt-1.5 h-2 overflow-hidden rounded-full", soft.track)}>
+                                    <div className={cn("h-full rounded-full transition-[width] duration-500 ease-power4-out", soft.bar)} style={{ width: `${progress?.percent ?? 0}%` }} />
+                                  </div>
+                                </div>
                                 <div className="mt-3 flex items-center justify-between gap-2">
                                   <div className="flex -space-x-1.5">
                                     {people.slice(0, 3).map((person) => (
-                                      <span key={person.id} title={person.name} className="grid size-6 place-items-center rounded-full border border-background bg-foreground text-[9px] font-semibold text-background">
+                                      <span key={person.id} title={person.name} className={cn("grid size-6 place-items-center rounded-full border-2 border-background text-[9px] font-semibold", soft.chip)}>
                                         {initials(person.name)}
                                       </span>
                                     ))}
@@ -291,7 +308,7 @@ export function KanbanBoard({ deals, onSelectDeal, onAddDeal, searchQuery, secto
                       );
                     })}
                     {provided.placeholder}
-                    {column.deals.length === 0 && <p className="py-8 text-center text-xs text-muted-foreground">No deals</p>}
+                    {column.deals.length === 0 && <p className="rounded-3xl border border-dashed border-border/80 py-10 text-center text-xs text-muted-foreground">No deals</p>}
                   </div>
                 )}
               </Droppable>

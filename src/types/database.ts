@@ -1,4 +1,4 @@
-export type DealTier = "active_tier_1" | "active_tier_2" | "pipeline" | "passed";
+export type DealTier = "active" | "pipeline" | "passed";
 export type RealizedStatus = "closed" | "analysis" | "portfolio";
 export type PartnerRole = "advisors" | "operators" | "co-investors" | "others" | "bankers" | "lawyers" | "lenders";
 export type RoleOnDeal = "source" | "advisor" | "co-investor" | "operator" | "other" | "lender" | "introducer";
