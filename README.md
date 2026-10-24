@@ -4,7 +4,7 @@
 
 The app ships empty: no sample deals or seed data. You create deals from scratch or import a spreadsheet.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fszesiangchong%2Fdeal-crm-template-bare&project-name=deal-crm&env=NEXT_PUBLIC_SUPABASE_URL%2CNEXT_PUBLIC_SUPABASE_ANON_KEY%2CTEAM_ALLOWED_EMAILS%2CTEAM_PASSWORD_HASH%2CSESSION_SECRET%2CSUPABASE_TEAM_PASSWORD%2CCRON_SECRET%2CMCP_TOKEN_SECRET&envDescription=Supabase+URL+and+anon+key%2C+team+allow-list+and+secrets.+See+docs%2FSETUP.md.&envLink=https%3A%2F%2Fgithub.com%2Fszesiangchong%2Fdeal-crm-template-bare%2Fblob%2Fmain%2Fdocs%2FSETUP.md)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsethchongss%2Fdeal-crm-template-bare&project-name=deal-crm&env=NEXT_PUBLIC_SUPABASE_URL%2CNEXT_PUBLIC_SUPABASE_ANON_KEY%2CTEAM_ALLOWED_EMAILS%2CTEAM_PASSWORD_HASH%2CSESSION_SECRET%2CSUPABASE_TEAM_PASSWORD%2CCRON_SECRET%2CMCP_TOKEN_SECRET&envDescription=Supabase+URL+and+anon+key%2C+team+allow-list+and+secrets.+See+docs%2FSETUP.md.&envLink=https%3A%2F%2Fgithub.com%2Fsethchongss%2Fdeal-crm-template-bare%2Fblob%2Fmain%2Fdocs%2FSETUP.md)
 
 The button asks for the Supabase URL and anon key plus the secrets listed below. Any Postgres-compatible Supabase setup works (Supabase Cloud free plan or self-hosted).
 
