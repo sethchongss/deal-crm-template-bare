@@ -282,9 +282,9 @@ export function KanbanBoard({ deals, onSelectDeal, onAddDeal, searchQuery, secto
                                   </Tooltip>
                                 )}
                                 <CardValuation deal={deal} className={summary ? "mt-1" : "mt-2"} />
-                                <div className="mt-3" aria-label="Checklist progress">
+                                <div className="mt-3" aria-label="Deal progress">
                                   <div className="flex items-center justify-between text-[11px] font-medium text-muted-foreground">
-                                    <span>Checklist</span>
+                                    <span>Progress</span>
                                     <span className="tabular-nums">{progress && progress.total > 0 ? `${progress.done}/${progress.total} · ${progress.percent}%` : "Not started"}</span>
                                   </div>
                                   <div className={cn("mt-1.5 h-2 overflow-hidden rounded-full", soft.track)}>
